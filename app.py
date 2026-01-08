@@ -494,7 +494,7 @@ def load_model():
         print(f"  - Movies in model: {len(model.movie_to_index)}")
         print(f"  - Latent factors (K): {model.hyperparameters.get('K', 'N/A')}")
         print(f"  - Weight for item biases: {model.weight}")
-        st.success("✓ Model extracted and loaded successfully!")
+       
         
         return model
         
