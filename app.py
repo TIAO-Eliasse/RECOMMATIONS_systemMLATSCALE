@@ -693,7 +693,6 @@ def display_hero_with_stats():
         <div class="hero-content">
             <div class="hero-left">
                 <h1 class="hero-title">Welcome.</h1>
-                
                 <p class="hero-subtitle">Millions of movies to discover. Explore now.</p>
             </div>
             <div class="hero-stats">
@@ -713,11 +712,7 @@ def display_hero_with_stats():
         </div>
     </div>
     """
-    st.markdown("""
-        <div class="footer">
-            <p>Movie Recommender System | Developed by <span class="footer-author">TIAO Eliasse</span>, AIMS Student</p>
-        </div>
-    """, unsafe_allow_html=True)
+   
     st.markdown(html, unsafe_allow_html=True)
 
 
