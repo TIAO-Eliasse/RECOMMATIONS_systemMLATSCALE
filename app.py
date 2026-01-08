@@ -465,7 +465,7 @@ def load_model():
     """Load ALS model from .pkl or from ZIP containing a .pkl"""
     
     
-    zip_path = "trained_models/als_model_latest.zip"
+    zip_path = "als_model_latest.zip"
 
   
     if os.path.exists(zip_path):
