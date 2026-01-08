@@ -478,8 +478,7 @@ def load_model():
         extract_dir = os.path.dirname(model_zip) if os.path.dirname(model_zip) else "."
         model_pkl = os.path.join(extract_dir, "als_model_latest.pkl")
         
-        # Extract the zip file
-        st.info(f"📦 Extracting model from {model_zip}...")
+        
         with zipfile.ZipFile(model_zip, 'r') as zip_ref:
             zip_ref.extractall(extract_dir)
         
