@@ -507,6 +507,14 @@ def load_model():
         st.success("✓ Model extracted and loaded successfully!")
         
         return model
+        
+    except zipfile.BadZipFile:
+        st.error("⚠️ Invalid zip file. Please check your 'als_model_latest.zip'")
+        return ALSRecommenderModel()
+    except Exception as e:
+        st.error(f"⚠️ Error loading model from zip: {e}")
+        st.info("The system will use basic recommendation methods.")
+        return ALSRecommenderModel()
 # @st.cache_resource
 # def load_model():
 #     """Load ALS model from .pkl or from ZIP containing a .pkl"""
