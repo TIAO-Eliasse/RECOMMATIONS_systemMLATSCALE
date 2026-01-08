@@ -34,19 +34,12 @@ from utils import (
 from model_integration import ALSRecommenderModel, hybrid_recommendation
 
 
-# ============================
-# TMDB API CONFIGURATION
-# ============================
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 TMDB_MOVIE_BASE_URL = "https://www.themoviedb.org/movie/"
 
-
-# ============================
-# PAGE CONFIGURATION
-# ============================
 
 st.set_page_config(
     page_title="Movie Recommender - TIAO Eliasse",
@@ -56,9 +49,7 @@ st.set_page_config(
 )
 
 
-# ============================
-# TMDB-INSPIRED CSS (FIXED)
-# ============================
+
 
 def load_custom_css():
     """Loads TMDB-inspired CSS styling with fixes"""
@@ -509,10 +500,10 @@ def load_model():
         return model
         
     except zipfile.BadZipFile:
-        st.error("⚠️ Invalid zip file. Please check your 'als_model_latest.zip'")
+        st.error(" Invalid zip file. Please check your 'als_model_latest.zip'")
         return ALSRecommenderModel()
     except Exception as e:
-        st.error(f"⚠️ Error loading model from zip: {e}")
+        st.error(f" Error loading model from zip: {e}")
         st.info("The system will use basic recommendation methods.")
         return ALSRecommenderModel()
 # @st.cache_resource
@@ -528,7 +519,7 @@ def load_model():
 #             with zipfile.ZipFile(zip_path, 'r') as z:
 #                 pkl_files = [f for f in z.namelist() if f.endswith('.pkl')]
 #                 if len(pkl_files) != 1:
-#                     st.warning(f"⚠️ Expected exactly 1 .pkl inside ZIP, found {len(pkl_files)}")
+#                     st.warning(f"Expected exactly 1 .pkl inside ZIP, found {len(pkl_files)}")
 #                     return ALSRecommenderModel()
 #                 pkl_name = pkl_files[0]
 
@@ -583,9 +574,6 @@ def init_session_state():
         st.session_state.last_ratings_count = 0
 
 
-# ============================
-# UTILITY FUNCTIONS
-# ============================
 
 def extract_title_and_year(full_title: str) -> tuple:
     """Extracts movie title and year from format 'Title (Year)'"""
@@ -603,9 +591,6 @@ def generate_unique_key(base: str, movie_id: int, context: str = "") -> str:
     return f"{base}_{movie_id}_{hash_key}"
 
 
-# ============================
-# TMDB API FUNCTIONS
-# ============================
 
 @st.cache_data(ttl=3600)
 def get_movie_data_from_tmdb(title: str, year: Optional[str] = None) -> Optional[Dict]:
@@ -700,9 +685,7 @@ def filter_movies_by_genre(df_movies: pd.DataFrame, genre: str) -> pd.DataFrame:
     return df_movies[df_movies['genres'].str.contains(genre, na=False)]
 
 
-# ============================
-# RECOMMENDATION GENERATION
-# ============================
+
 
 def generate_recommendations(ratings: Dict[int, float], 
                             df_movies: pd.DataFrame,
@@ -733,9 +716,6 @@ def generate_recommendations(ratings: Dict[int, float],
         return get_collaborative_recommendations(ratings, df_movies, n_recs)
 
 
-# ============================
-# DISPLAY FUNCTIONS
-# ============================
 
 def display_hero_with_stats():
     """Displays hero section with stats"""
@@ -930,9 +910,7 @@ def display_movie_grid(movies: List[Dict], show_rating: bool = False):
                     display_movie_card(movies[idx], show_rating)
 
 
-# ============================
-# MAIN APPLICATION
-# ============================
+
 
 def main():
     """Main application function"""
