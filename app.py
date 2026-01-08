@@ -693,7 +693,7 @@ def display_hero_with_stats():
         <div class="hero-content">
             <div class="hero-left">
                 <h1 class="hero-title">Welcome.</h1>
-                 <p>Movie Recommender System | Developed by <span class="footer-author">TIAO Eliasse</span>, AIMS Student</p>
+                
                 <p class="hero-subtitle">Millions of movies to discover. Explore now.</p>
             </div>
             <div class="hero-stats">
