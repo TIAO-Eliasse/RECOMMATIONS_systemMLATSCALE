@@ -77,7 +77,7 @@ def load_custom_css():
         
         .block-container {
             padding: 0 !important;
-            max-width: 100% !important;
+            max-width: 100% !important;TMDB_API_KEY = 6dfcc050917bae29f25185975f23c0e9
         }
         
         /* Hero Section */
@@ -712,7 +712,11 @@ def display_hero_with_stats():
         </div>
     </div>
     """
-   
+    st.markdown("""
+        <div class="footer">
+            <p>Movie Recommender System | Developed by <span class="footer-author">TIAO Eliasse</span>, AIMS Student</p>
+        </div>
+    """, unsafe_allow_html=True)
     st.markdown(html, unsafe_allow_html=True)
 
 
