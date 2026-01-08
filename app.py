@@ -462,52 +462,99 @@ def load_data():
 
 @st.cache_resource
 def load_model():
-    """Load ALS model from .pkl or from ZIP containing a .pkl"""
+    """Loads ALS model from zipped file (supports root or trained_models folder)"""
+    import zipfile
+    
+    # Check for zip file in root directory first, then in trained_models/
+    possible_paths = [
+        "als_model_latest.zip",  # Root directory (GitHub case)
+        os.path.join("trained_models", "als_model_latest.zip")  # Subdirectory
+    ]
+    
+    model_zip = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            model_zip = path
+            break
+    
+    if not model_zip:
+        st.warning("⚠️ Zipped model not found")
+        st.info("💡 Please place 'als_model_latest.zip' in the project root or 'trained_models/' folder")
+        return ALSRecommenderModel()
+    
+    try:
+        # Determine extraction directory
+        extract_dir = os.path.dirname(model_zip) if os.path.dirname(model_zip) else "."
+        model_pkl = os.path.join(extract_dir, "als_model_latest.pkl")
+        
+        # Extract the zip file
+        st.info(f"📦 Extracting model from {model_zip}...")
+        with zipfile.ZipFile(model_zip, 'r') as zip_ref:
+            zip_ref.extractall(extract_dir)
+        
+        # Load the extracted .pkl file
+        if not os.path.exists(model_pkl):
+            st.error(f"⚠️ Expected file 'als_model_latest.pkl' not found after extraction")
+            st.info(f"Looked in: {extract_dir}")
+            return ALSRecommenderModel()
+        
+        # Load the model
+        model = ALSRecommenderModel(model_pkl)
+        print(f"✓ ALS Model loaded successfully from {model_zip}!")
+        print(f"  - Movies in model: {len(model.movie_to_index)}")
+        print(f"  - Latent factors (K): {model.hyperparameters.get('K', 'N/A')}")
+        print(f"  - Weight for item biases: {model.weight}")
+        st.success("✓ Model extracted and loaded successfully!")
+        
+        return model
+# @st.cache_resource
+# def load_model():
+#     """Load ALS model from .pkl or from ZIP containing a .pkl"""
     
     
-    zip_path = "als_model_latest.zip"
+#     zip_path = "als_model_latest.zip"
 
   
-    if os.path.exists(zip_path):
-        try:
-            with zipfile.ZipFile(zip_path, 'r') as z:
-                pkl_files = [f for f in z.namelist() if f.endswith('.pkl')]
-                if len(pkl_files) != 1:
-                    st.warning(f"⚠️ Expected exactly 1 .pkl inside ZIP, found {len(pkl_files)}")
-                    return ALSRecommenderModel()
-                pkl_name = pkl_files[0]
+#     if os.path.exists(zip_path):
+#         try:
+#             with zipfile.ZipFile(zip_path, 'r') as z:
+#                 pkl_files = [f for f in z.namelist() if f.endswith('.pkl')]
+#                 if len(pkl_files) != 1:
+#                     st.warning(f"⚠️ Expected exactly 1 .pkl inside ZIP, found {len(pkl_files)}")
+#                     return ALSRecommenderModel()
+#                 pkl_name = pkl_files[0]
 
-                with z.open(pkl_name) as f:
-                    data = pickle.load(f)
+#                 with z.open(pkl_name) as f:
+#                     data = pickle.load(f)
 
              
-                if isinstance(data, ALSRecommenderModel):
-                    model = data
+#                 if isinstance(data, ALSRecommenderModel):
+#                     model = data
                
-                elif isinstance(data, dict):
-                    model = ALSRecommenderModel()
-                    model.user_factors = data.get('user_factors')
-                    model.movie_factors = data.get('movie_factors')
-                    model.movie_to_index = data.get('movie_to_index', {})
-                    model.index_to_movie = data.get('index_to_movie', {})
-                    model.hyperparameters = data.get('hyperparameters', {})
-                    model.weight = data.get('weight', model.hyperparameters.get('taubias', 0.05))
-                else:
-                    st.warning(" Unknown object inside ZIP pickle")
-                    return ALSRecommenderModel()
+#                 elif isinstance(data, dict):
+#                     model = ALSRecommenderModel()
+#                     model.user_factors = data.get('user_factors')
+#                     model.movie_factors = data.get('movie_factors')
+#                     model.movie_to_index = data.get('movie_to_index', {})
+#                     model.index_to_movie = data.get('index_to_movie', {})
+#                     model.hyperparameters = data.get('hyperparameters', {})
+#                     model.weight = data.get('weight', model.hyperparameters.get('taubias', 0.05))
+#                 else:
+#                     st.warning(" Unknown object inside ZIP pickle")
+#                     return ALSRecommenderModel()
 
             
-            return model
+#             return model
 
-        except Exception as e:
-            st.warning(f" Error loading ALS model from ZIP: {e}")
-            st.info("Fallback to basic recommendation methods.")
-            return ALSRecommenderModel()
+#         except Exception as e:
+#             st.warning(f" Error loading ALS model from ZIP: {e}")
+#             st.info("Fallback to basic recommendation methods.")
+#             return ALSRecommenderModel()
 
-    else:
-        st.warning(f" ALS model not found (.pkl or .zip)")
-        st.info("Please place your trained model in the 'trained_models/' folder.")
-        return ALSRecommenderModel()
+#     else:
+#         st.warning(f" ALS model not found (.pkl or .zip)")
+#         st.info("Please place your trained model in the 'trained_models/' folder.")
+#         return ALSRecommenderModel()
 
 
 def init_session_state():
