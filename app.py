@@ -491,7 +491,7 @@ def load_model():
                     model.movie_to_index = data.get('movie_to_index', {})
                     model.index_to_movie = data.get('index_to_movie', {})
                     model.hyperparameters = data.get('hyperparameters', {})
-                    model.weight = data.get('weight', model.hyperparameters.get('taubias', 0.0))
+                    model.weight = data.get('weight', model.hyperparameters.get('taubias', 0.05))
                 else:
                     st.warning(" Unknown object inside ZIP pickle")
                     return ALSRecommenderModel()
